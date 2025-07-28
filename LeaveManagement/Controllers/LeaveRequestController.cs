@@ -108,9 +108,8 @@ namespace LeaveManagement.Controllers
 
                 TempData["succ"] = "Leave Reqest added successfully";
                 return RedirectToAction(nameof(UploadAttachment), new { id= model.Id});
-
             }
-            
+
             TempData["err"] = "Please fill the details correctly!";
             return View(model);
         }
