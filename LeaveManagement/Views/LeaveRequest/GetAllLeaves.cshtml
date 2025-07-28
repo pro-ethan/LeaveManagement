@@ -1,0 +1,162 @@
+﻿@model List<LeaveManagement.Models.ViewModel.LeaveWithFilesViewModel>
+
+@{
+    ViewData["Title"] = "Get All Leaves";
+}
+<style>
+    .scrollable-tbody {
+        display: block;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+
+        .scrollable-tbody tr {
+            display: table;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+    thead tr {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+    }
+</style>
+
+<div class="container mt-4">
+    <div class="card shadow-sm rounded">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <h4 class="mb-0 me-2">All Leave Requests</h4>
+                <a href="" class="text-white text-decoration-none">
+                    <i class="bi bi-arrow-clockwise" style="color:black" onclick="StatusCheck()"></i>
+                </a>
+            </div>
+            <div class="d-flex align-items-center">
+                <div class="btn-group me-2" role=x`"group">
+                    <a href="?sort=Sick" class="btn btn-outline-light btn-sm">Sick</a>
+                    <a href="?sort=Casual" class="btn btn-outline-light btn-sm">Casual</a>
+                    <a href="?sort=Emergency" class="btn btn-outline-light btn-sm">Emergency</a>
+                </div>
+
+                <a asp-controller="LeaveRequest" asp-action="Leave" class="btn btn-light">Leave Form</a>
+            </div>
+            
+        </div>
+
+        <div class="card-body">
+            <table class="table table-hover table-bordered align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>#</th>
+                        <th>User ID</th>
+                        <th>
+                            Type
+                            <a href="?sort=LeaveTypeAsc" class="text-decoration-none ms-1">
+                                <span title="Ascending"><i class="bi bi-caret-up-fill"></i></span>
+                            </a>
+                            <a href="?sort=LeaveTypeDesc" class="text-decoration-none">
+                                <span title="Descending"><i class="bi bi-caret-down-fill"></i></span>
+                            </a>
+                        </th>
+                        <th>
+                            Start Date
+                            <a href="?sort=startDateAsc" class="text-decoration-none ms-1">
+                                <span title="Ascending"><i class="bi bi-caret-up-fill"></i></span>
+                            </a>
+                            <a href="?sort=startDateDesc" class="text-decoration-none">
+                                <span title="Descending"><i class="bi bi-caret-down-fill"></i></span>
+                            </a>
+                        </th>
+                        <th>End Date</th>
+                        <th>
+                            Status
+                            <a href="?sort=statusAsc" class="text-decoration-none ms-1">
+                                <span title="Ascending"><i class="bi bi-caret-up-fill"></i></span>
+                            </a>
+                            <a href="?sort=statusDesc" class="text-decoration-none">
+                                <span title="Descending"><i class="bi bi-caret-down-fill"></i></span>
+                            </a>
+                        </th>
+                        <th>Reason</th>
+                        <th>Created At</th>
+                    </tr>
+                </thead>
+                <tbody class="scrollable-tbody">
+
+                    @foreach (var item in Model)
+                    {
+                        var leave = item.Leave;
+                        var file = item.File;
+
+                        <tr class="@GetStatusClass(leave.Status)">
+                            <td>@leave.Id</td>
+                            <td>@leave.UserId</td>
+                            <td>@leave.LeaveType</td>
+                            <td>@leave.StartDate.ToShortDateString()</td>
+                            <td>@leave.EndDate.ToShortDateString()</td>
+                            <td id="status-@leave.Id"><span class="badge @GetStatusBadge(leave.Status)">@leave.Status</span></td>
+                            <td>@leave.Reason</td>
+                            <td>@leave.CreatedAt.ToShortDateString()</td>
+                        </tr>
+                        @if (file != null)
+                        {
+                            <tr>
+                                <td colspan="8">
+                                    <strong>Uploaded File for ID: @leave.Id</strong>
+                                    <a href="@Url.Content("~/uploads/" + file.FileName)" target="_blank">
+                                        @file.FileName
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div> 
+</div>
+
+@functions {
+    private string GetStatusClass(string status) => status switch
+    {
+        "Approved" => "table-success",
+        "Rejected" => "table-danger",
+        "Pending" => "table-warning",
+        _ => ""
+    };
+
+    private string GetStatusBadge(string status) => status switch
+    {
+        "Approved" => "bg-success",
+        "Rejected" => "bg-danger",
+        "Pending" => "bg-warning text-dark",
+        _ => "bg-secondary"
+    };
+}
+
+@*API call*@
+
+<script>
+    async function StatusCheck(){
+        try{
+            const response = await fetch('/LeaveRequest/GetAllStatuses', {
+            method: 'GET',
+            });
+            if(!response.ok){
+                throw new Error("Error in fetching status");
+            }
+
+            const statuses = await response.json();
+            statuses.forEach(status=>{
+                const row = document.getElementById(`status-${status.Id}`);
+                if(row){
+                    row.textContent = status.Status;
+                }
+            });
+        }catch(err){
+            alert("Failed to fetch statuses.Or the Status hasn't chabged yet!");
+            console.error(err);
+        }
+    }
+</script>

@@ -1,0 +1,56 @@
+﻿@model LeaveManagement.Models.DTO.LeaveRequest
+
+@{
+    ViewData["Title"] = "Request Leave";
+    Layout = "_OnlyHeader";
+}
+
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h4 class="">Request Leave</h4>
+            <a asp-controller="LeaveRequest" asp-action="GetAllLeaves" class="btn btn-info">History</a>
+        </div>
+        <div class="card-body">
+            <form asp-action="Leave" method="post">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="mb-3">
+                    <label asp-for="LeaveType" class="form-label"></label>
+                    <select asp-for="LeaveType" class="form-select" >
+                        <option value="">-- Select Leave Type --</option>
+                        <option>Sick</option>
+                        <option>Casual</option>
+                        <option>Emergency</option>
+                    </select>
+                    @* <span asp-validation-for="LeaveType" class="text-danger"></span> *@
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="StartDate" class="form-label"></label>
+                    <input asp-for="StartDate" class="form-control" type="date"  />
+                    @* <span asp-validation-for="StartDate" class="text-danger"></span> *@
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="EndDate" class="form-label"></label>
+                    <input asp-for="EndDate" class="form-control" type="date"  />
+                    @* <span asp-validation-for="EndDate" class="text-danger"></span> *@
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Reason" class="form-label"></label>
+                    <textarea asp-for="Reason" class="form-control" rows="3" placeholder="Reason for leave "></textarea>
+                    @* <span asp-validation-for="Reason" class="text-danger"></span> *@
+                </div>
+
+                <button type="submit" class="btn btn-success">Submit Request</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

@@ -1,0 +1,92 @@
+﻿@model IEnumerable<LeaveManagement.Models.DTO.LeaveRequest>
+@{
+    ViewData["Title"] = "Approver Dashboard";
+}
+
+
+
+<h2>All Leave Requests</h2>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-primary">
+        <tr>
+            <th>Employee ID</th>
+            <th>
+                Leave Type
+                <a href="?sort=LeaveAsc" class="text-decoration-none ms-1">
+                    <span title="Ascending"><i class="bi bi-caret-up-fill"></i></span>
+                </a>
+                <a href="?sort=LeaveDesc" class="text-decoration-none">
+                    <span title="Descending"><i class="bi bi-caret-down-fill"></i></span>
+                </a>
+            </th>
+            <th>
+                Start
+                <a href="?sort=startDateAsc" class="text-decoration-none ms-1">
+                    <span title="Ascending"><i class="bi bi-caret-up-fill"></i></span>
+                </a>
+                <a href="?sort=startDateDesc" class="text-decoration-none">
+                    <span title="Descending"><i class="bi bi-caret-down-fill"></i></span>
+                </a>
+            </th>
+            <th>End</th>
+            <th>Reason</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.Any())
+        {
+            <div class="alert alert-info text-center">
+                No leave requests found.
+            </div>
+        }else{
+        @foreach (var request in Model)
+        {
+            <tr>
+                <td>@request.UserId</td>
+                <td>@request.LeaveType</td>
+                <td>@request.StartDate.ToShortDateString()</td>
+                <td>@request.EndDate.ToShortDateString()</td>
+                <td>
+                    <span title="@request.Reason" >
+                        @request.Reason?.Substring(0, Math.Min(30, request.Reason.Length))...
+                    </span>
+                </td>
+                <td>
+                    @if (request.Status == "Pending")
+                    {
+                        <span class="badge bg-warning text-dark">Pending</span>
+                    }
+                    else if (request.Status == "Approved")
+                    {
+                        <span class="badge bg-success">Approved</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger">Rejected</span>
+                    }
+                </td>
+                <td>
+                    @if (request.Status == "Pending")
+                    {
+                        <form  method="post" class="d-inline">
+                            <input type="hidden" name="id" value="@request.Id" />
+                            <button class="btn btn-sm btn-success" asp-controller="LeaveRequest" asp-action="Approve" asp-route-id="@request.Id">Approve</button>
+                        </form>
+                        <form  method="post" class="d-inline ms-1">
+                            <input type="hidden" name="id" value="@request.Id" />
+                            <button class="btn btn-sm btn-danger" asp-controller="LeaveRequest" asp-action="Reject" asp-route-id="@request.Id">Reject</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <em>N/A</em>
+                    }
+                </td>
+            </tr>
+        }
+        }
+    </tbody>
+</table>

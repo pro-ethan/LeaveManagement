@@ -1,0 +1,32 @@
+﻿
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@if (TempData["succ"] != null)
+{
+    <script>
+        Toastify({
+            text: "@TempData["succ"]",
+            duration: 3000,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "green",
+            close: true
+        }).showToast();
+    </script>
+}
+
+@if (TempData["err"] != null)
+{
+    <script>
+        Toastify({
+            text: "@TempData["err"]",
+            duration: 3000,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "red",
+            close: true
+        }).showToast();
+    </script>
+}

@@ -1,0 +1,48 @@
+﻿@model LeaveManagement.Models.ViewModel.RegisterViewModel
+
+<form method="post">
+    <div class="border p-3 mt-4">
+        <div class="row pb-2">
+            <h2 class="text-primary border-bottom">Sign Up</h2>
+        </div>
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div class="mb-3">
+            <label asp-for="FullName"></label>
+            <input class="form-control" asp-for="FullName" />
+            @* <span asp-validation-for="FullName" class="text-danger"></span> *@
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Email"></label>
+            <input class="form-control" asp-for="Email" />
+            @* <span asp-validation-for="Email" class="text-danger"></span> *@
+
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Password"></label>
+            <input class="form-control" asp-for="Password" />
+            @* <span asp-validation-for="Password" class="text-danger"></span> *@
+
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="ConfirmPassword"></label>
+            <input class="form-control" asp-for="ConfirmPassword" />
+            @* <span asp-validation-for="ConfirmPassword" class="text-danger"></span> *@
+
+        </div>
+        <button class="btn btn-primary" type="submit" style="width:150px">Sign Up</button>
+        <a asp-controller="Account" asp-action="Login" class="btn btn-secondary">Already Signed in? Log in</a>
+    </div>
+</form>
+
+
+@*Adding this partial view for client side validation*@
+
+@section scripts{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}
+

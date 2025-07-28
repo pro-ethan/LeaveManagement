@@ -1,0 +1,37 @@
+﻿@model LeaveManagement.Models.ViewModel.LoginViewModel
+
+
+<form method="post">
+    <div class="border p-3 mt-4">
+        <div class="row pb-2">
+            <h2 class="text-primary border-bottom">Login</h2>
+        </div>
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div class="mb-3">
+            <label asp-for="Email"></label>
+            <input class="form-control" asp-for="Email" />
+            @* <span asp-validation-for="Email" class="text-danger"></span> *@
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Password"></label>
+            <input class="form-control" asp-for="Password" />
+            @* <span asp-validation-for="Password" class="text-danger"></span> *@
+
+        </div>
+        <button class="btn btn-primary" type="submit" style="width:150px">Log In</button>
+        <a asp-controller="Account" asp-action="Signin" class="btn btn-secondary">Don't have an account? Sign Up'</a>
+    </div>
+</form>
+
+
+
+
+
+
+
+@section scripts{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}
